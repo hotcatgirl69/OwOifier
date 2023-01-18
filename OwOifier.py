@@ -1,6 +1,5 @@
 from random import random, choice
 from pyperclip import copy
-from PIL import Image
 from customtkinter import *
 
 
@@ -79,11 +78,12 @@ class OwOifier:
                 
                 if self.replaceWords:
                     if text[line][word].lower() in self.replacements:
-                        text[line][word] = self.replacements[text[line][word]].upper() if text[line][word].isupper() else self.replacements[text[line][word]]
+                        text[line][word] = self.replacements[text[line][word].lower()].upper() if text[line][word].isupper() else self.replacements[text[line][word].lower()]
                         text[line][word] = f'${text[line][word]}$'
 
                 if text[line][word][0] == '$' and text[line][word][-1] == '$':
                     text[line][word] = text[line][word].replace('$', '')
+                    word += 1
                     continue
 
                 if self.LRToW:
