@@ -27,6 +27,8 @@ class OwOifier:
         "for": "4",
         "how": "meow",
         "feeling": "feline",
+        "are": "r",
+        "thanks": "thx",
     }
 
     prefixes = [
@@ -139,11 +141,11 @@ class App(CTk):
         super().__init__()
 
         self.title("OwOifier")
+        self.geometry(f'{440}x{720}')
 
         set_appearance_mode("system")
         set_default_color_theme("blue")
-        self.resizable(False, False)
-        
+
         self.configure(fg_color=("#ddb6dc", "#1f1f1f"))
 
         #create widgets
@@ -170,7 +172,7 @@ class App(CTk):
         self.replaceWordsCheck = CTkCheckBox(self.checkboxFrame, text="Replace Words", command=self.updateReplaceWords)
         #input button
         self.inputButton = CTkButton(self.menuFrame, text="OwOify!!", command=self.updateText)
-        
+
         #set slider defaults
         self.stutterSlider.set(15)
         self.prefixSlider.set(15)
@@ -199,13 +201,11 @@ class App(CTk):
         #placing widgets in grid layout
         #text
         self.textFrame.grid(row=0, column=0, columnspan=2, padx=20, pady=20, sticky=NSEW)
-        self.textFrame.columnconfigure(0, weight=1)
         self.inputBox.grid(row=0, column=0, pady=(0, 20), sticky=NSEW)
         self.output.grid(row=1, column=0, sticky=NSEW)
         self.copyButton.grid(row=2, column=0, padx=20, sticky=E)
         #menu
-        self.menuFrame.grid(row=1, column=0, padx=20, pady=(0, 20), columnspan=2)
-        self.menuFrame.columnconfigure(1, weight=1)
+        self.menuFrame.grid(row=1, column=0, columnspan=2, padx=20, pady=(0, 20))
         #slider
         self.sliderFrame.grid(row=0, column=0, columnspan=2)
         self.stutterLabel.grid(row=0, column=0, sticky=NSEW)
@@ -216,12 +216,29 @@ class App(CTk):
         self.suffixSlider.grid(row=1, column=2, sticky=NSEW)
         #checkbox
         self.checkboxFrame.grid(row=1, column=0, pady=(10, 0), sticky=W)
-        self.LRToWCheck.grid(row=0, column=0, padx=20, pady=(20, 10), sticky=W)
-        self.YAfterNCheck.grid(row=1, column=0, padx=20, pady=(0, 10), sticky=W)
-        self.repeatAfterYCheck.grid(row=2, column=0, padx=20, pady=(0, 10), sticky=W)
-        self.replaceWordsCheck.grid(row=3, column=0, padx=20, pady=(0, 20), sticky=W)
-        #input button
+        self.LRToWCheck.grid(row=0, column=0, padx=(0, 10), pady=(20, 10), sticky=W)
+        self.YAfterNCheck.grid(row=1, column=0, padx=(0, 10), pady=(0, 10), sticky=W)
+        self.repeatAfterYCheck.grid(row=2, column=0, padx=(0, 10), pady=(0, 10), sticky=W)
+        self.replaceWordsCheck.grid(row=3, column=0, padx=(0, 10), sticky=W)
         self.inputButton.grid(row=1, column=1, padx=(10, 0), pady=(10, 0), sticky=NSEW)
+
+        #allow for resizable widgets
+        #root
+        self.rowconfigure(0, weight=1)
+        self.rowconfigure(1, weight=1)
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=1)
+        #textFrame
+        self.textFrame.rowconfigure(0, weight=1)
+        self.textFrame.rowconfigure(1, weight=1)
+        self.textFrame.columnconfigure(0, weight=1)
+        #menuFrame
+        self.menuFrame.rowconfigure(1, weight=1)
+        self.menuFrame.columnconfigure(1, weight=1)
+        #sliderFrame is scalable horizontally only
+        self.sliderFrame.columnconfigure(0, weight=1)
+        self.sliderFrame.columnconfigure(1, weight=1)
+        self.sliderFrame.columnconfigure(2, weight=1)
 
         #starting application
         self.owo = OwOifier()
