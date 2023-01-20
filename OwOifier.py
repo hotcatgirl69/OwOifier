@@ -67,14 +67,13 @@ class OwOifier:
 		self.suffixChance = suffixChance
 
 	def owoify(self) -> str:
-		text = self.text.split('\n')[:-1]
-		for line in range(len(text) - 1):
+		text = self.text.split('\n')[:-1]  #split into individual lines and remove the last empty line
+		for line in range(len(text)):
 			text[line] = text[line].split()
-			skip = False
 			word = 0
 			while word < len(text[line]):
-				if skip:
-					skip = False
+				#iterate over if there are no alpha characters
+				if not True in [char.isalpha() for char in text[line][word]]:
 					word += 1
 					continue
 				
@@ -83,6 +82,7 @@ class OwOifier:
 						text[line][word] = self.replacements[text[line][word].lower()].upper() if text[line][word].isupper() else self.replacements[text[line][word].lower()]
 						text[line][word] = f'${text[line][word]}$'
 
+				#remove escape characters and iterate over
 				if text[line][word][0] == '$' and text[line][word][-1] == '$':
 					text[line][word] = text[line][word].replace('$', '')
 					word += 1
@@ -100,25 +100,19 @@ class OwOifier:
 									text[line][word] = text[line][word][:char] + text[line][word][char].replace(text[line][word][char], 'y') + text[line][word][char:]
 
 				if self.repeatAfterY:
-					if text[line][word].len() > 3:
+					if len(text[line][word]) > 3:
 						if text[line][word][-1].lower() == 'y':
 							text[line].insert(word + 1, 'w' + text[line][word][1:])
-							skip = True
+							word += 1
 
 				if self.stutterChance > 0 and self.stutterChance < 1:
-					#find the first character that is a letter
-					letter = -1
-					for char in range(len(text[line][word])):
-						if text[line][word][char].isalpha(): 
-							letter = char 
-							break
+					letter = text[line][word].find(next(filter(str.isalpha, text[line][word])))
 					#recursively add stutter to word
-					if letter > 0:
-						while True:
-							if random() < self.stutterChance:
-								text[line][word] = text[line][word][:letter+1] + '-' + text[line][word][letter:] 
-							else:
-								break
+					while True:
+						if random() < self.stutterChance:
+							text[line][word] = text[line][word][:letter+1] + '-' + text[line][word][letter:]
+						else:
+							break
 
 				if self.prefixChance > 0 and self.prefixChance < 1:
 					if random() < self.prefixChance:
@@ -128,10 +122,9 @@ class OwOifier:
 				if self.suffixChance > 0 and self.suffixChance < 1:
 					if random() < self.suffixChance:
 						text[line].insert(word+1, choice(self.suffixes))
-						word += 1
-						skip = True
+						word += 2  #add a word, then iterate over it
 
-				word += 1 #iterate
+				word += 1
 
 			text[line] = ' '.join(text[line])
 
