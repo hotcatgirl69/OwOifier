@@ -1,5 +1,6 @@
 from random import random, choice
 from pyperclip import copy
+from lorem import sentence
 from customtkinter import *
 
 
@@ -129,10 +130,10 @@ class OwOifier:
 		return word
 
 	def YAfterN(self, word: str) -> str:
-		for char in range(len(word) - 1):
+		for char in range(len(word) - 2):
 			if word[char].lower() == 'n':
 				if word[char+1].lower() in ['a', 'e', 'i', 'o', 'u']:
-					word = word[:char] + word[char+1].replace(word[char+1], 'y') + word[char+1:]
+					word = word[:char+1] + word[char+2].replace(word[char+2], 'y') + word[char+1:]
 		return word
 
 	def repeatAfterY(self, line: list[str], index: int) -> tuple[list[str], int]:
@@ -191,6 +192,7 @@ class App(CTk):
 		self.inputBox = CTkTextbox(self.textFrame, wrap=WORD)
 		self.output = CTkTextbox(self.textFrame, wrap=WORD, state=DISABLED)
 		self.copyButton = CTkButton(self.textFrame, text="Copy Output", command=self.copyText)
+		self.loremIpsumButton = CTkButton(self.textFrame, text="Lorem Ipsum", command=self.loremIpsum)
 		# menu
 		self.menuFrame = CTkFrame(self)
 		# slider
@@ -231,6 +233,7 @@ class App(CTk):
 		self.checkboxFrame.configure(fg_color="transparent")
 		self.inputButton.configure(fg_color="#9e2e96", hover_color="#7f2478")
 		self.copyButton.configure(fg_color="#9e2e96", hover_color="#7f2478")
+		self.loremIpsumButton.configure(fg_color="#9e2e96", hover_color="#7f2478")
 		self.stutterSlider.configure(button_color="#9e2e96", progress_color="#9e2e96", button_hover_color="#7f2478")
 		self.prefixSlider.configure(button_color="#9e2e96", progress_color="#9e2e96", button_hover_color="#7f2478")
 		self.suffixSlider.configure(button_color="#9e2e96", progress_color="#9e2e96", button_hover_color="#7f2478")
@@ -242,9 +245,10 @@ class App(CTk):
 		# placing widgets in grid layout
 		# text
 		self.textFrame.grid(row=0, column=0, columnspan=2, padx=20, pady=20, sticky=NSEW)
-		self.inputBox.grid(row=0, column=0, pady=(0, 20), sticky=NSEW)
-		self.output.grid(row=1, column=0, sticky=NSEW)
-		self.copyButton.grid(row=2, column=0, padx=20, sticky=E)
+		self.inputBox.grid(row=0, column=0, columnspan=2, pady=(0, 20), sticky=NSEW)
+		self.output.grid(row=1, column=0, columnspan=2, sticky=NSEW)
+		self.loremIpsumButton.grid(row=2, column=0, sticky=W)
+		self.copyButton.grid(row=2, column=1, padx=20, sticky=E)
 		# menu
 		self.menuFrame.grid(row=1, column=0, columnspan=2, padx=20, pady=(0, 20))
 		# slider
@@ -291,6 +295,11 @@ class App(CTk):
 
 	def copyText(self) -> None:
 		copy(self.output.get('0.0', END))
+
+	def loremIpsum(self) -> None:
+		self.inputBox.delete('0.0', END)
+		self.inputBox.insert('0.0', '\n'.join([sentence() for i in range(10)]))
+		self.updateText()
 
 	# slider functions
 	def updateStutter(self, val) -> None:
