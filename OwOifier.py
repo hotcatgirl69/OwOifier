@@ -3,10 +3,11 @@ from random import choice, randint
 from customtkinter import *
 from pyperclip import copy
 from lorem import sentence
+from json import load
 
 
 class owoifier:
-    def __init__(self, inputText='', LRToWs=True, YAfterNs=True, repeatAfterYs=True, replaceWords=True, stutterChance=0.15, prefixChance=0.15, suffixChance=0.15) -> None:
+    def __init__(self, inputText='', LRToWs=True, YAfterNs=True, repeatAfterYs=True, replaceWords=True, stutterChance=15, prefixChance=15, suffixChance=15) -> None:
         self.inputText = inputText
         self.LRToWs = LRToWs
         self.YAfterNs = YAfterNs
@@ -17,12 +18,12 @@ class owoifier:
         self.suffixChance = suffixChance
 
 		# TODO: import settings from settings.json
-        self.replacements = {"moe": "Mowo", "love": "wuv", "mr.": "mistuh", "dog": "doggo", "cat": "kitteh", "hello": "henwo", "hell": "heck", "fuck": "fwick", "baby": "bae", "shit": "shoot", "friend": "fren", "stop": "stawp", "god": "gosh", "dick": "pp", "penis": "pp", "cock": "pp", "damn": "darn", "you": "u", "your": "ur", "please": "pls", "for": "4", "how": "meow", "feeling": "feline", "are": "r", "thanks": "thx",}
-        self.prefixes = ["OwO", "hehe", "*nuzzles*", "*blushes*", "*giggles*", "*waises paw*", "whats this", "*notices bulge*", "*unbuttons shirt*",]
-        self.suffixes = [":3", ">:3", "xox", ">~<", ">3<", "=3=", "UwU", "hehe", "murr~", "*gwomps*",]
-        self.noTranslations = ["lol", "lmao", "lmfao",]
-
-        self.settings = [self.inputText, self.LRToWs, self.YAfterNs, self.repeatAfterYs, self.replaceWords, self.stutterChance, self.prefixChance, self.suffixChance, self.replacements, self.prefixes, self.suffixes, self.noTranslations,]
+        with open('settings.json', 'r') as data:
+            settings = load(data)
+        self.replacements = settings["replacements"]
+        self.prefixes = settings["prefixes"]
+        self.suffixes = settings["suffixes"]
+        self.noTranslations = settings["noTranslations"]
 
     def owoify(self) -> str:
         self.text = [line.split() for line in self.inputText.splitlines()]
