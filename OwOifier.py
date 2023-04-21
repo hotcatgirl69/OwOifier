@@ -1,4 +1,4 @@
-from json import load
+from yaml import safe_load
 from random import choice, randint
 
 from customtkinter import *
@@ -17,7 +17,7 @@ class owoifier:
         self.suffixChance = suffixChance
 
 		# TODO: import settings from settings.json
-        with open('settings.json', 'r') as data: settings: dict = load(data)
+        with open('settings.json', 'r') as data: settings: dict = safe_load(data)
         self.replacements: dict[str, str] = settings["replacements"]
         self.prefixes: list[str] = settings["prefixes"]
         self.suffixes: list[str] = settings["suffixes"]
