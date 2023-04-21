@@ -17,7 +17,7 @@ class owoifier:
         self.suffixChance = suffixChance
 
 		# TODO: import settings from settings.json
-        with open('settings.json', 'r') as data: settings: dict = safe_load(data)
+        with open('settings.yaml', 'r') as data: settings: dict = safe_load(data)
         self.replacements: dict[str, str] = settings["replacements"]
         self.prefixes: list[str] = settings["prefixes"]
         self.suffixes: list[str] = settings["suffixes"]
@@ -216,7 +216,7 @@ class App(CTk):
 
     def pasta(self) -> None:
         self.inputBox.delete('0.0', END)
-        with open("settings.json") as data: settings: dict = load(data)
+        with open("settings.yaml") as data: settings: dict = safe_load(data)
         self.inputBox.insert('0.0', choice(settings["pasta"]))
         self.updateText()
 
