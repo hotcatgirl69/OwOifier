@@ -152,9 +152,9 @@ class App(CTk):
         self.replaceCheck = CTkCheckBox(self.checkboxFrame, text="Replace Words", command=self.updateReplace)
 
     def setDefaults(self) -> None:
-        self.stutterSlider.set(15); self.prefixSlider.set(15); self.suffixSlider.set(15)
+        self.stutterSlider.set(self.owo.stutter); self.prefixSlider.set(self.owo.prefix); self.suffixSlider.set(self.owo.suffix)
         self.updateStutter(self.stutterSlider.get()); self.updateSuffix(self.prefixSlider.get()); self.updatePrefix(self.suffixSlider.get())
-        self.LWCheck.select(); self.YNCheck.select(); self.repeatCheck.select(); self.replaceCheck.select()
+        self.LWCheck.select(self.owo.LW); self.YNCheck.select(self.owo.YN); self.repeatCheck.select(self.owo.repeat); self.replaceCheck.select(self.owo.replace)
 
     def setColors(self) -> None:
         self.sliderFrame.configure(fg_color="transparent")
