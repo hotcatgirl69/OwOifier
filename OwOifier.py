@@ -1,23 +1,20 @@
 from yaml import safe_load
 from random import choice, randint
 
-from customtkinter import *
-from pyperclip import copy
-
 
 class owoifier:
-    def __init__(self, inputText='', LW=True, YN=True, repeat=True, replace=True, stutterChance=15, prefixChance=15, suffixChance=15) -> None:
-        self.inputText = inputText
-        self.LW = LW
-        self.YN = YN
-        self.repeat = repeat
-        self.replace = replace
-        self.stutterChance = stutterChance
-        self.prefixChance = prefixChance
-        self.suffixChance = suffixChance
+    def __init__(self) -> None:
+        with open('settings.yml', 'r') as data: settings: dict = safe_load(data)
+        
+        self.inputText: str = settings["defaults"]["inputText"]
+        self.LW: bool = settings["defaults"]["LW"]
+        self.YN: bool = settings["defaults"]["YN"]
+        self.repeat: bool = settings["defaults"]["repeat"]
+        self.replace: bool = settings["defaults"]["replace"]
+        self.stutter: int = settings["defaults"]["stutter"]
+        self.prefix: int = settings["defaults"]["prefix"]
+        self.suffix: int = settings["defaults"]["suffix"]
 
-		# TODO: import settings from settings.json
-        with open('settings.yaml', 'r') as data: settings: dict = safe_load(data)
         self.replacements: dict[str, str] = settings["replacements"]
         self.prefixes: list[str] = settings["prefixes"]
         self.suffixes: list[str] = settings["suffixes"]
@@ -38,9 +35,9 @@ class owoifier:
                 if self.LW: self.LRToW()
                 if self.YN: self.YAfterN()
                 if self.repeat: self.repeatAfterY()
-                if 0 != self.stutterChance and 0 not in alpha: self.addStutter()
-                if 0 != self.prefixChance: self.addPrefix()
-                if 0 != self.suffixChance: self.addSuffix()
+                if 0 != self.stutter and 0 not in alpha: self.addStutter()
+                if 0 != self.prefix: self.addPrefix()
+                if 0 != self.suffix: self.addSuffix()
                 self.word += 1
         return '\n'.join([' '.join(line) for line in self.text])
 
@@ -90,7 +87,7 @@ class owoifier:
         word = self.text[self.line][self.word]
         stutter = []
         step, increaseChance = 1, 0
-        while randint(1, 100) < self.stutterChance:
+        while randint(1, 100) < self.stutter:
             if randint(1, 10) <= increaseChance: step += 1; increaseChance = 0
             if step > len(word): break
             stutter.append(word[:step])
@@ -100,15 +97,19 @@ class owoifier:
 
     def addPrefix(self) -> None:
         word = self.text[self.line][self.word]
-        if randint(1, 100) < self.prefixChance:
+        if randint(1, 100) < self.prefix:
             word = f"{choice(self.prefixes)} {word}"
         self.text[self.line][self.word] = word
 
     def addSuffix(self) -> None:
         word = self.text[self.line][self.word]
-        if randint(1, 100) < self.suffixChance:
+        if randint(1, 100) < self.suffix:
             word = f"{word} {choice(self.suffixes)}"
         self.text[self.line][self.word] = word
+
+
+from customtkinter import *
+from pyperclip import copy
 
 
 class App(CTk):
@@ -216,21 +217,21 @@ class App(CTk):
 
     def pasta(self) -> None:
         self.inputBox.delete('0.0', END)
-        with open("settings.yaml") as data: settings: dict = safe_load(data)
+        with open("settings.yml") as data: settings: dict = safe_load(data)
         self.inputBox.insert('0.0', choice(settings["pasta"]))
         self.updateText()
 
     # slider functions
     def updateStutter(self, val) -> None:
-        self.owo.stutterChance = val
+        self.owo.stutter = val
         self.stutterLabel.configure(text=f'Stutter Chance: {val:.0f}%')
 
     def updatePrefix(self, val) -> None:
-        self.owo.prefixChance = val
+        self.owo.prefix = val
         self.prefixLabel.configure(text=f'Prefix Chance: {val:.0f}%')
 
     def updateSuffix(self, val) -> None:
-        self.owo.suffixChance = val
+        self.owo.suffix = val
         self.suffixLabel.configure(text=f'Suffix Chance: {val:.0f}%')
 
     # checkbox functions
