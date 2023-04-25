@@ -4,11 +4,10 @@ OwO's your text >~<
 Use `$` around text to mark them to not translate. For example, 
 ```
 >>> "$Discord Kitten$: Thanks mr"
-... "Discord Kitten: thx mistuh"
+... "Discord Kitten: Thx mistuh"
 ```
 ## Future Updates
-- Update text without pressing the update button. Up for debate.
-- Able to see, change, and delete replacements, prefixes, and suffixes in the app.
+- Able to see, change, and delete settings within the app.
 - Replace segments within text. For example, 
 ```
     >>> {"per": "purr"}

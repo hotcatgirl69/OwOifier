@@ -25,7 +25,7 @@ class owoifier:
         for self.line in range(len(self.text)):
             self.word = 0
             while self.word < len(self.text[self.line]):
-                alpha = self.findAlpha()
+                alpha = {int(alpha.isalpha()) for alpha in self.text[self.line][self.word]}
                 if 1 not in alpha: self.word += 1; continue
                 if self.replace: self.replaceWord()
                 self.dontTranslate()
@@ -40,9 +40,6 @@ class owoifier:
                 if 0 != self.suffix: self.addSuffix()
                 self.word += 1
         return '\n'.join([' '.join(line) for line in self.text])
-
-    def findAlpha(self) -> set[int]:
-        return {int(alpha.isalpha()) for alpha in self.text[self.line][self.word]}
 
     def replaceWord(self) -> None:
         word = self.text[self.line][self.word]
@@ -120,7 +117,6 @@ class App(CTk):
         self.title("OwOifier")
         self.minsize(700, 350)
         set_appearance_mode("system")
-        set_default_color_theme("blue")
         self.configure(fg_color=("#ddb6dc", "#333333"))
         
         # widgets
